@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,NotFoundException } from '@nestjs/common';
+import { InjectRepository} from'@nestjs/typeorm';
+import { Repository} from 'typeorm';
+import { booking}from './entities/booking.entity';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 
@@ -16,7 +19,7 @@ export class BookingsService {
     return `This action returns a #${id} booking`;
   }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
+  post(id: number, updateBookingDto: UpdateBookingDto) {
     return `This action updates a #${id} booking`;
   }
 

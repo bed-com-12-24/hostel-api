@@ -1,37 +1,31 @@
-import { Hostel } from './hostels/entities/hostel.entity';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HostelsController } from './hostels/hostels.controller';
-import { HostelsService } from './hostels/hostels.service';
-import { HostelsModule } from './hostels/hostels.module';
-import { TypeOrmModule
- } from '@nestjs/typeorm';
- 
- import { ConfigModule } from '@nestjs/config';
 import { BookingsModule } from './bookings/bookings.module';
- 
- 
-
+import { config } from 'process';
+import { booking } from './bookings/entities/booking.entity';
 
 @Module({
-  imports:[
-  ConfigModule.forRoot({ isGlobal: true }),
-  
-  TypeOrmModule.forRoot({
-  type: 'oracle',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '1521'),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  serviceName: process.env.DB_SERVICE_NAME,
-  synchronize: true,
-  entities: [Hostel],
-  logging: true,
-
-}),HostelsModule, BookingsModule],
-  
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'oracle',
+        host: config.get('BD_HOST'),
+        port: parseInt(config.get('DB_PORT') ?? '1521'),
+        password: config.get('DB_PASSWORD'), 
+        serviceName: config.get('DB_SERVICE_NAME'), 
+        synchronize: config.get('DB_SYNCHRONIZE') === 'true', 
+        entities: [booking],
+        logging: true,
+      }),
+    }),
+    
+    BookingsModule,
+  ],
 })
 export class AppModule {}
-
-
