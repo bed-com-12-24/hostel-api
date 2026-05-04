@@ -1,29 +1,36 @@
+import { Hostel } from './hostels/entities/hostel.entity';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { databaseConfig } from './config/database.config';
+import { HostelsController } from './hostels/hostels.controller';
+import { HostelsService } from './hostels/hostels.service';
+import { HostelsModule } from './hostels/hostels.module';
+import { TypeOrmModule
+ } from '@nestjs/typeorm';
+ 
+ import { ConfigModule } from '@nestjs/config';
+ 
+ 
+
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [() => databaseConfig],
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('typeorm'),
-      }),
-      inject: [ConfigService],
-    }),
-    AuthModule,
-    UsersModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+  imports:[
+  ConfigModule.forRoot({ isGlobal: true }),
+  
+  TypeOrmModule.forRoot({
+  type: 'oracle',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT || '1521'),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  serviceName: process.env.DB_SERVICE_NAME,
+  synchronize: true,
+  entities: [Hostel],
+  logging: true,
+
+}),HostelsModule],
+  
 })
 export class AppModule {}
+
+
