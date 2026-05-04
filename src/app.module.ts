@@ -9,6 +9,7 @@ import { TypeOrmModule
  } from '@nestjs/typeorm';
  
  import { ConfigModule } from '@nestjs/config';
+import { BookingsModule } from './bookings/bookings.module';
  
  
 
@@ -28,7 +29,7 @@ import { TypeOrmModule
   entities: [Hostel],
   logging: true,
 
-}),HostelsModule],
+}),HostelsModule, BookingsModule],
   
 })
 export class AppModule {}
