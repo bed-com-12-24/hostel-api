@@ -12,6 +12,8 @@ import { AppService } from './app.service';
 import { BookingsModule } from './bookings/bookings.module';
 import { config } from 'process';
 import { booking } from './bookings/entities/booking.entity';
+import { HostelsModule } from './hostels/hostels.module';
+import { Hostel } from './hostels/entities/hostel.entity';
 
 @Module({
   imports:[
@@ -27,7 +29,7 @@ import { booking } from './bookings/entities/booking.entity';
                 password: config.get('DB_PASSWORD'), 
                 serviceName: config.get('DB_SERVICE_NAME'), 
                 synchronize: config.get('DB_SYNCHRONIZE') === 'true', 
-                entities: [Notification, payment, Auth, booking], 
+                entities: [Notification, payment, Auth, booking, Hostel], 
                 logging: true,
        }),
      }),
@@ -35,6 +37,7 @@ import { booking } from './bookings/entities/booking.entity';
      PaymentModule,
      AuthModule,
      BookingsModule,
+     HostelsModule,
     ]
   })
 
