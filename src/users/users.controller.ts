@@ -22,6 +22,21 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @Get(':id/fines')
+  findFines(@Param('id') id: string) {
+    return this.usersService.findFines(+id);
+  }
+
+  @Get(':id/hostels')
+  findHostels(@Param('id') id: string) {
+    return this.usersService.findHostels(+id);
+  }
+
+  @Get(':id/reservations')
+  findReservations(@Param('id') id: string) {
+    return this.usersService.findReservations(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
