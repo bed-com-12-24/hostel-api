@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { payment } from './entities/payment.entity';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { promises } from 'dns';
 
 @Injectable()
 export class PaymentService {

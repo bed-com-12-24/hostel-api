@@ -6,6 +6,7 @@ import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
 import { Auth } from './auth/entities/auth.entity';
 import { payment } from './payment/entities/payment.entity';
+import { Notification } from './notification/entities/notification.entity';
 
 @Module({
   imports:[

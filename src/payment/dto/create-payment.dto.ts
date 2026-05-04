@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsNotEmpty, IsNumber, IsDate, } from "class-validator";
-export class CreateNotificationDto{
+import { Type } from 'class-transformer';
+export class CreatePaymentDto{
 
     @IsString()
     @IsNotEmpty()
@@ -19,6 +20,7 @@ export class CreateNotificationDto{
 
     @IsNotEmpty()
     @IsDate()
+    @Type(() => Date)
     date_payed!: Date;
       
     

@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeor
 @Entity('payment')
 export class payment {
   @PrimaryGeneratedColumn()
-  payment_id!: number;
+  id!: number;
 
   @Column({ length: 255 })
   payment_method!: string;
