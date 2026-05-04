@@ -7,6 +7,11 @@ import { NotificationModule } from './notification/notification.module';
 import { Auth } from './auth/entities/auth.entity';
 import { payment } from './payment/entities/payment.entity';
 import { Notification } from './notification/entities/notification.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { BookingsModule } from './bookings/bookings.module';
+import { config } from 'process';
+import { booking } from './bookings/entities/booking.entity';
 
 @Module({
   imports:[
@@ -22,13 +27,15 @@ import { Notification } from './notification/entities/notification.entity';
                 password: config.get('DB_PASSWORD'), 
                 serviceName: config.get('DB_SERVICE_NAME'), 
                 synchronize: config.get('DB_SYNCHRONIZE') === 'true', 
-                entities: [Notification, payment, Auth], 
+                entities: [Notification, payment, Auth, booking], 
                 logging: true,
        }),
      }),
      NotificationModule,
      PaymentModule,
-     AuthModule
+     AuthModule,
+     BookingsModule,
     ]
   })
+
 export class AppModule {}
