@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, UnauthorizedException, BadGatewayException, BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private readonly usersService: UsersService,
+    private readonly jwtService: JwtService
+  ) {}
+
+  //-------------REGISTER----------------
+  async register(dto: RegisterDto) {
+
+    //1. Validate required fields manually
+
+    if (!dto.email || !dto.password || !dto.name) {  
+      throw new BadRequestException('name, email and password are required');
+    }
+
+    //2. Hash the password 
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    
+    //3. Create the user
+    const user = await this.usersService.create({
+      name: dto.name,
+      email: dto.email,
+      password: hashedPassword,
+      role: dto.role ?? 'student',
+      studentId: dto.studentId,
+    });
+
+    //4. Return the user without password
+    const token = this.signToken(user.id, user.email, user.role);
+    return { user: this.usersService.sanitize(user), token };
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+  
+  //--------------------LOGIN ----------------------
 }
