@@ -1,25 +1,27 @@
-import{Entity,PrimaryGeneratedColumn,Column, CreateDateColumn} from'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity('bookings')
-export class booking{
+export class booking {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @PrimaryGeneratedColumn()
-    id!: number;
-    
-    @Column({length:255})
-    name!: string;
+  @Column({ length: 255 })
+  name!: string;
 
-    @Column({length: 255})
-    email!: string;
+  @Column({ length: 255 })
+  email!: string;
 
-    @Column({})
-    hostelNumber!: number;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  date!: Date;
 
-    @Column({})
-    bookingFee!: number;
+  @Column()
+  hostelNumber!: number;
 
-    @CreateDateColumn()
-    createAt!: Date;
+  @Column()
+  bookingFee!: number;
+
+  @CreateDateColumn()
+  createAt!: Date;
 }
 
 

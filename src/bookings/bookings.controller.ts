@@ -22,7 +22,13 @@ export class BookingsController {
     return this.bookingsService.findOne(+id);
   }
 
-
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateBookingDto: UpdateBookingDto,
+  ) {
+    return this.bookingsService.update(+id, updateBookingDto);
+  }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {

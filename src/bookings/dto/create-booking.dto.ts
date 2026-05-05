@@ -1,22 +1,26 @@
-import { IsString, IsNumber, IsOptional, IsNotEmpty, IsDate } from 'class-validator'; 
-export class CreateBookingDto { 
-@IsString() 
-@IsNotEmpty() 
-name: string;
+import { IsString, IsNumber, IsOptional, IsNotEmpty, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
 
-@IsString() 
-@IsNotEmpty() 
-email: string;
+export class CreateBookingDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-@IsDate() 
-date: Date;
+  @IsString()
+  @IsNotEmpty()
+  email: string;
 
-@IsNumber() 
-@IsNotEmpty() 
-hostelNumber: number;
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  date?: Date;
 
-@IsNotEmpty()
-@IsNumber()
-bookingFee:number
+  @IsNumber()
+  @IsNotEmpty()
+  hostelNumber: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  bookingFee: number;
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Hostel } from './entities/hostel.entity';
@@ -12,23 +12,36 @@ export class HostelsService {
     private readonly hostelRepository: Repository<Hostel>,
   ) {}
 
-  create(createHostelDto: CreateHostelDto) {
-    return this.hostelRepository.save(createHostelDto);
+  async create(createHostelDto: CreateHostelDto) {
+    const hostel = this.hostelRepository.create(createHostelDto);
+    return this.hostelRepository.save(hostel);
   }
 
   findAll() {
     return this.hostelRepository.find();
   }
 
-  findOne(id: number) {
-    return this.hostelRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const hostel = await this.hostelRepository.findOne({ where: { id } });
+    if (!hostel) {
+      throw new NotFoundException(`Hostel #${id} not found`);
+    }
+    return hostel;
   }
 
-  update(id: number, updateHostelDto: UpdateHostelDto) {
-    return this.hostelRepository.update(id, updateHostelDto);
+  async update(id: number, updateHostelDto: UpdateHostelDto) {
+    const hostel = await this.hostelRepository.preload({ id, ...updateHostelDto });
+    if (!hostel) {
+      throw new NotFoundException(`Hostel #${id} not found`);
+    }
+    return this.hostelRepository.save(hostel);
   }
 
-  remove(id: number) {
-    return this.hostelRepository.delete(id);
+  async remove(id: number) {
+    const result = await this.hostelRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Hostel #${id} not found`);
+    }
+    return { message: `Hostel ${id} deleted successfully` };
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Report, PaymentStatus } from './entities/report.entity';
@@ -12,24 +12,37 @@ export class ReportsService {
     private readonly reportRepository: Repository<Report>,
   ) {}
 
-  create(createReportDto: CreateReportDto) {
-    return this.reportRepository.save(createReportDto);
+  async create(createReportDto: CreateReportDto) {
+    const report = this.reportRepository.create(createReportDto);
+    return this.reportRepository.save(report);
   }
 
   findAll() {
     return this.reportRepository.find({ order: { createdAt: 'DESC' } });
   }
 
-  findOne(id: number) {
-    return this.reportRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const report = await this.reportRepository.findOne({ where: { id } });
+    if (!report) {
+      throw new NotFoundException(`Report #${id} not found`);
+    }
+    return report;
   }
 
-  update(id: number, updateReportDto: UpdateReportDto) {
-    return this.reportRepository.update(id, updateReportDto);
+  async update(id: number, updateReportDto: UpdateReportDto) {
+    const report = await this.reportRepository.preload({ id, ...updateReportDto });
+    if (!report) {
+      throw new NotFoundException(`Report #${id} not found`);
+    }
+    return this.reportRepository.save(report);
   }
 
-  remove(id: number) {
-    return this.reportRepository.delete(id);
+  async remove(id: number) {
+    const result = await this.reportRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Report #${id} not found`);
+    }
+    return { message: `Report ${id} deleted successfully` };
   }
 
   async FindAllOccupants() {
