@@ -1,3 +1,4 @@
+
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
@@ -16,6 +17,8 @@ import { booking } from './bookings/entities/booking.entity';
 //import { Hostel } from './hostels/entities/hostel.entity';
 import { ReportsModule } from './reports/reports.module.js';
 import { Report } from './reports/entities/report.entity'
+import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports:[
@@ -31,7 +34,7 @@ import { Report } from './reports/entities/report.entity'
                 password: config.get('DB_PASSWORD'), 
                 serviceName: config.get('DB_SERVICE_NAME'), 
                 synchronize: config.get('DB_SYNCHRONIZE') === 'true', 
-                entities: [Notification, payment, booking, Report], 
+                entities: [Notification, payment, booking, Report, User], 
                 logging: true,
        }),
      }),
@@ -41,7 +44,9 @@ import { Report } from './reports/entities/report.entity'
      BookingsModule,
      //HostelsModule,
      ReportsModule,
+     UsersModule,
     ]
   })
+
 
 export class AppModule {}
