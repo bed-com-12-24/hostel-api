@@ -4,22 +4,22 @@ import{Entity,PrimaryGeneratedColumn,Column, CreateDateColumn} from'typeorm';
 export class booking{
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
     
     @Column({length:255})
-    name: string;
+    name!: string;
 
     @Column({length: 255})
-    email: string;
+    email!: string;
 
     @Column({})
-    hostelNumber: number;
+    hostelNumber!: number;
 
     @Column({})
-    bookingFee: number;
+    bookingFee!: number;
 
     @CreateDateColumn()
-    createAt: Date;
+    createAt!: Date;
 }
 
 
