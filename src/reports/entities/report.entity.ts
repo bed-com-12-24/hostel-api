@@ -29,8 +29,8 @@ export class Report {
   id!: number;
 
   @Column({
-    type: 'enum',
-    enum: PaymentMethod,
+    type: 'varchar',
+    length: 20,
     default: PaymentMethod.CREDIT_CARD,
   })
   paymentMethod!: PaymentMethod;
@@ -39,8 +39,8 @@ export class Report {
   amountPaid!: number;
 
   @Column({
-    type: 'enum',
-    enum: PaymentStatus,
+    type: 'varchar',
+    length: 20,
     default: PaymentStatus.PENDING,
   })
   status!: PaymentStatus;
@@ -54,7 +54,7 @@ export class Report {
   @Column({ nullable: true, length: 255 })
   transactionId?: string;
 
-  @Column({ nullable: true, type: 'text' })
+  @Column({ nullable: true, type: 'clob' })
   description?: string;
 
   @CreateDateColumn()
