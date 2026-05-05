@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ReportsModule } from './reports/reports.module.js';
+
 import { Report } from './reports/entities/report.entity'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
-import { AuthModule } from './auth/auth.module';
-import { PaymentModule } from './payment/payment.module';
-import { NotificationModule } from './notification/notification.module';
+
 import { Auth } from './auth/entities/auth.entity';
 import { payment } from './payment/entities/payment.entity';
 import { Notification } from './notification/entities/notification.entity';
 import { Hostel } from './hostels/entities/hostel.entity';
-import { HostelsModule } from './hostels/hostels.module';
 
+import { ReportsModule } from './reports/reports.module';
+import { HostelsModule } from './hostels/hostels.module';
+import { AuthModule } from './auth/auth.module';
+import { PaymentModule } from './payment/payment.module';
+import { NotificationModule } from './notification/notification.module';
 @Module({
   imports:[
     ConfigModule.forRoot({ isGlobal: true }),
