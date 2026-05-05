@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-import { Report } from './reports/entities/report.entity'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
 
@@ -10,6 +8,7 @@ import { Auth } from './auth/entities/auth.entity';
 import { payment } from './payment/entities/payment.entity';
 import { Notification } from './notification/entities/notification.entity';
 import { Hostel } from './hostels/entities/hostel.entity';
+import { Report } from './reports/entities/report.entity';
 
 import { ReportsModule } from './reports/reports.module';
 import { HostelsModule } from './hostels/hostels.module';
