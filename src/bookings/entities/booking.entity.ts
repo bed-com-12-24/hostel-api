@@ -12,10 +12,10 @@ export class booking{
     @Column({length: 255})
     email: string;
 
-    @Column({length: 225})
+    @Column({})
     hostelNumber: number;
 
-    @Column({length: 225})
+    @Column({})
     bookingFee: number;
 
     @CreateDateColumn()
