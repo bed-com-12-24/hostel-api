@@ -1,18 +1,12 @@
-import { Hostel } from './hostels/entities/hostel.entity';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HostelsController } from './hostels/hostels.controller';
-import { HostelsService } from './hostels/hostels.service';
-import { HostelsModule } from './hostels/hostels.module';
-import { TypeOrmModule
- } from '@nestjs/typeorm';
- 
- import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { ReportsModule } from './reports/reports.module.js';
+import { Report } from './reports/entities/report.entity'
  
- 
-
 
 @Module({
   imports:[
@@ -26,10 +20,10 @@ import { AuthModule } from './auth/auth.module';
   password: process.env.DB_PASSWORD,
   serviceName: process.env.DB_SERVICE_NAME,
   synchronize: true,
-  entities: [Hostel],
+  entities: [ Report ],
   logging: true,
 
-}),HostelsModule, AuthModule],
+}), ReportsModule],
   
 })
 export class AppModule {}
