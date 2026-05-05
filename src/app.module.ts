@@ -11,6 +11,8 @@ import { NotificationModule } from './notification/notification.module';
 import { Auth } from './auth/entities/auth.entity';
 import { payment } from './payment/entities/payment.entity';
 import { Notification } from './notification/entities/notification.entity';
+import { Hostel } from './hostels/entities/hostel.entity';
+import { HostelsModule } from './hostels/hostels.module';
 
 @Module({
   imports:[
@@ -33,7 +35,8 @@ import { Notification } from './notification/entities/notification.entity';
      NotificationModule,
      PaymentModule,
      AuthModule,
-     ReportsModule
+     ReportsModule,
+     HostelsModule
     ]
   })
 export class AppModule {}
