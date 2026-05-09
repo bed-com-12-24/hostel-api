@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 export class CreateBookingDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
   @IsOptional()
   @Type(() => Date)
@@ -17,10 +17,10 @@ export class CreateBookingDto {
 
   @IsNumber()
   @IsNotEmpty()
-  hostelNumber: number;
+  hostelNumber!: number;
 
   @IsNotEmpty()
   @IsNumber()
-  bookingFee: number;
+  bookingFee!: number;
 }
 

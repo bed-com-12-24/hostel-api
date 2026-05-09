@@ -45,9 +45,9 @@ import { BookingsModule } from './bookings/bookings.module';
      HostelsModule,
      ReportsModule,
      UsersModule,
-    ]
+    ],
+    exports :[HostelsModule]
   })
 
-
-
 export class AppModule {}
+
