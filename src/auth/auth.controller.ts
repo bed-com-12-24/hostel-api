@@ -1,25 +1,42 @@
-import { Controller, Post, Body } from '@nestjs/common';
+// src/auth/auth.controller.ts
+
+import { Controller, Post, Get, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginAuthDto } from './dto/login.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtGuard, Public } from './guards/jwt.guard';
+import type { Request } from 'express';
 
 @Controller('auth')
+@UseGuards(JwtGuard) // applied globally to this controller
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+
+  @Public()
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
   }
 
+ 
+  @Public()
   @Post('login')
-  login(@Body() loginAuthDto: LoginAuthDto) {
-    return this.authService.login(loginAuthDto);
+  login(@Body() dto: LoginAuthDto) {
+    return this.authService.login(dto);
   }
 
-  @Post('update')
-  update(@Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(updateAuthDto);
+  // PUBLIC — stateless JWT, logout is handled client-side (delete the token)
+  @Public()
+  @Post('logout')
+  logout() {
+    return { message: 'Logged out. Delete the token on your client.' };
+  }
+
+  // PROTECTED — must send Bearer token
+  @Get('me')
+  getProfile(@Req() req: Request) {
+    const user = (req as any).user;
+    return this.authService.getProfile(user.sub);
   }
 }

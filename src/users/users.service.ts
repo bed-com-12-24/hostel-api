@@ -46,6 +46,20 @@ export class UsersService {
     return this.findOne(id);
   }
 
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return user;
+  }
+
+  async findById(id: number) {
+    return this.findOne(id);
+  }
+
+  sanitize(user: User) {
+    const { password, ...sanitized } = user;
+    return sanitized;
+  }
+
   async remove(id: number) {
     await this.userRepository.delete(id);
     return { deleted: true };

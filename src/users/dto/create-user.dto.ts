@@ -6,17 +6,25 @@ export class CreateUserDto {
 
   @IsString()
   @MinLength(2)
-  @MaxLength(100)
-  firstName!: string;
+  @MaxLength(200)
+  name!: string;
 
-  @IsOptional()
   @IsString()
-  @MaxLength(100)
-  lastName?: string;
+  @MinLength(8)
+  @MaxLength(16)
+  password!:string;
 
   @IsOptional()
   @IsString()
   @MaxLength(20)
   phoneNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
+
+  @IsOptional()
+  @IsString()
+  studentId?: string;
 }
 
