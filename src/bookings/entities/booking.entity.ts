@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Notification } from 'src/notification/entities/notification.entity';
 
 @Entity('bookings')
-export class booking {
+export class Booking {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ length: 255 })
-  name!: string;
+  @OneToMany(() => Notification, (notification) => notification.booking)
+  notifications!: Notification[];
 
   @Column({ length: 255 })
   email!: string;
