@@ -10,18 +10,20 @@ export class RegisterDto {
     
     @IsString()  
     @MinLength(2) 
-    @MaxLength(100) 
-    firstName!: string;  
-    
-    @IsOptional()  
-    @IsString() 
-    @MaxLength(100) 
-    lastName?: string;  
+    @MaxLength(200) 
+    name!: string;  
+      
     
     @IsOptional() 
     @IsString()  
     @MaxLength(20)
     phoneNumber?: string;
-} 
+    @IsOptional()
+    @IsString()
+    role?: string;
+
+    @IsOptional()
+    @IsString()
+    studentId?: string;} 
 
 export class CreateAuthDto extends RegisterDto {}

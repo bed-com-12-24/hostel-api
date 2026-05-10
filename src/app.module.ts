@@ -23,7 +23,7 @@ import { BookingsModule } from './bookings/bookings.module';
   imports:[
     ConfigModule.forRoot({ isGlobal: true }),
      TypeOrmModule.forRootAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       inject: [ConfigService],
        useFactory: (config: ConfigService) => ({ 
                type: 'oracle', 
@@ -44,9 +44,9 @@ import { BookingsModule } from './bookings/bookings.module';
      HostelsModule,
      ReportsModule,
      UsersModule,
-    ]
+    ],
+    exports :[HostelsModule]
   })
 
-
-
 export class AppModule {}
+

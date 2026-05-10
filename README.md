@@ -96,3 +96,23 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+## Database connection on localhost
+SELECT name, open_mode FROM v$pdbs;
+
+CREATE PLUGGABLE DATABASE hostelpdb
+ADMIN USER hostelpdb_admin IDENTIFIED BY hostelpdb_password
+FILE_NAME_CONVERT = (
+'C:\oracle\oradata\ORCL\pdbseed\',
+'C:\oracle\oradata\ORCL\hostelpdb\'
+);
+
+ALTER PLUGGABLE DATABASE hostelpdb OPEN;
+
+ALTER SESSION SET CONTAINER = hostelpdb;
+
+CREATE USER hostel_admin IDENTIFIED BY admin_password;
+GRANT CONNECT, RESOURCE, DBA TO hostel_admin;
+
+SELECT username FROM dba_users WHERE username = 'HOSTEL_ADMIN';

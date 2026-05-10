@@ -9,17 +9,22 @@ export class User {
   @Column({ length: 255, unique: true })
   email!: string;
 
-  @Column({ length: 100 })
-  firstName!: string;
+  @Column({ length: 200 })
+  name!: string;
 
-  @Column({ length: 100, nullable: true })
-  lastName?: string;
+  @Column({ length: 255 })
+  password!: string;
 
   @Column({ length: 20, nullable: true })
   phoneNumber?: string;
 
   @OneToMany(() => Notification, (notification) => notification.student)
   notifications!: Notification[];
+  @Column({ length: 50, default: 'student' })
+  role!: string;
+
+  @Column({ length: 50, nullable: true })
+  studentId?: string;
 
   @CreateDateColumn()
   createdAt!: Date;

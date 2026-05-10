@@ -1,79 +1,93 @@
-import { Injectable, BadRequestException, UnauthorizedException, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+// src/auth/auth.service.ts
+
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
+import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginAuthDto } from './dto/login.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { Auth } from './entities/auth.entity';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Auth)
-    private readonly authRepository: Repository<Auth>,
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
-    const existingUser = await this.authRepository.findOne({
-      where: { email: registerDto.email },
+  // ── REGISTER ──────────────────────────────────────────────────────────────
+  async register(dto: RegisterDto) {
+    // 1. Validate required fields manually (or use class-validator later)
+    if (!dto.email || !dto.password || !dto.name) {
+      throw new BadRequestException('name, email and password are required');
+    }
+
+    // 2. Hash the password — NEVER store plain text passwords
+    //    bcrypt salt rounds: 10 is the standard safe value
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    // 3. Save user (UsersService handles duplicate check)
+    const user = await this.usersService.create({
+      name: dto.name,
+      email: dto.email,
+      password: hashedPassword,
+      role: dto.role ?? 'student',
+      studentId: dto.studentId,
     });
 
-    if (existingUser) {
-      throw new BadRequestException('Email already registered');
-    }
-
-    const newUser = this.authRepository.create(registerDto);
-    const savedUser = await this.authRepository.save(newUser);
-    const { password, ...userWithoutPassword } = savedUser;
-
-    return {
-      message: 'User registered successfully',
-      user: userWithoutPassword,
-    };
+    // 4. Return safe user (no password) + their token so they're logged in immediately
+    const token = this.signToken(user.id, user.email, user.role);
+    return { user: this.usersService.sanitize(user), token };
   }
 
-  async login(loginAuthDto: LoginAuthDto) {
-    const user = await this.authRepository.findOne({
-      where: { email: loginAuthDto.email },
-    });
-
-    if (!user || user.password !== loginAuthDto.password) {
-      throw new UnauthorizedException('Invalid email or password');
+  // ── LOGIN ──────────────────────────────────────────────────────────────────
+  async login(dto: LoginAuthDto) {
+    // 1. Find user by email
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      // Don't say "user not found" — that leaks info. Generic message.
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { password, ...userWithoutPassword } = user;
-    return {
-      message: 'Login successful',
-      user: userWithoutPassword,
-      token: this.generateToken(user),
-    };
+    // 2. Compare submitted password against the stored hash
+    const passwordMatch = await bcrypt.compare(dto.password, user.password);
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    // 3. Sign a JWT and return it
+    const token = this.signToken(user.id, user.email, user.role);
+    return { user: this.usersService.sanitize(user), token };
   }
 
-  async update(updateAuthDto: UpdateAuthDto) {
-    if (!updateAuthDto.email) {
-      throw new BadRequestException('Email is required to update auth data');
-    }
-
-    const authUser = await this.authRepository.findOne({
-      where: { email: updateAuthDto.email },
-    });
-
-    if (!authUser) {
-      throw new NotFoundException('User not found');
-    }
-
-    Object.assign(authUser, updateAuthDto);
-    const updatedUser = await this.authRepository.save(authUser);
-    const { password, ...userWithoutPassword } = updatedUser;
-
-    return {
-      message: 'User updated successfully',
-      user: userWithoutPassword,
-    };
+  // ── GET PROFILE ───────────────────────────────────────────────────────────
+  async getProfile(userId: number) {
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new UnauthorizedException('User not found');
+    return this.usersService.sanitize(user);
   }
 
-  private generateToken(user: Auth): string {
-    return Buffer.from(JSON.stringify({ id: user.id, email: user.email })).toString('base64');
+  // ── SIGN TOKEN ────────────────────────────────────────────────────────────
+  // Pure TS function — takes user data, returns a signed JWT string
+  // The "payload" is what gets encoded inside the token
+  private signToken(id: number, email: string, role: string): string {
+    const payload = { sub: id, email, role };
+    return this.jwtService.sign(payload);
+    // Token expires in 1d (configured in AuthModule)
+  }
+
+  // ── VERIFY TOKEN ──────────────────────────────────────────────────────────
+  // Pure TS function — decodes and validates a JWT string
+  // Called by JwtGuard to check incoming requests
+  verifyToken(token: string): { sub: number; email: string; role: string } {
+    try {
+      return this.jwtService.verify(token);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }
-

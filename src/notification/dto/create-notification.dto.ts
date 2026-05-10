@@ -1,4 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsNotEmpty, IsDate } from "class-validator";
+import { Type } from "class-transformer";
 export class CreateNotificationDto{
 
     @IsString()
@@ -11,6 +12,7 @@ export class CreateNotificationDto{
 
     @IsNotEmpty()
     @IsDate()
+    @Type(() => Date)
     sentOn!: Date;
 
 

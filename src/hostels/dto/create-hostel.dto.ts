@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateHostelDto {
@@ -5,6 +6,7 @@ export class CreateHostelDto {
   name!: string;
 
   @IsNumber()
+  @Type(() => Number)
   availableRooms!: number;
 
   @IsOptional()

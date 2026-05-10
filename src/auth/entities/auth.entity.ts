@@ -12,10 +12,7 @@ export class Auth {
   password!: string;
 
   @Column({ length: 100 })
-  firstName!: string;
-
-  @Column({ length: 100, nullable: true })
-  lastName?: string;
+  name!: string;
 
   @Column({ length: 20, nullable: true })
   phoneNumber?: string;
