@@ -5,7 +5,7 @@ export class Auth {
   @PrimaryGeneratedColumn()
   id!: number;
 
-   @Column({ length: 100 })
+  @Column({ length: 100 })
   name!: string;
 
   @Column({ length: 255, unique: true })
@@ -13,7 +13,7 @@ export class Auth {
 
   @Column({ length: 255 })
   password!: string;
-  
+
   @Column({ length: 50, default: 'student' })
   role!: string;
 

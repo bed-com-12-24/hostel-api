@@ -10,7 +10,7 @@ import type { Request } from 'express';
 @Controller('auth')
 @UseGuards(JwtGuard) // applied globally to this controller
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
 
   @Public()
@@ -19,7 +19,7 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
- 
+
   @Public()
   @Post('login')
   login(@Body() dto: LoginAuthDto) {
