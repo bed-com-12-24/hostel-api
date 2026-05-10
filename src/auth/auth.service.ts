@@ -21,8 +21,8 @@ export class AuthService {
 
   // ── REGISTER ──────────────────────────────────────────────────────────────
   async register(dto: RegisterDto) {
-    // 1. Validate required fields manually (or use class-validator later)
-    if (!dto.email || !dto.password || !dto.name) {
+    // 1. Validate required fields manually and protect against missing request body.
+    if (!dto || !dto.email || !dto.password || !dto.name) {
       throw new BadRequestException('name, email and password are required');
     }
 
@@ -36,7 +36,6 @@ export class AuthService {
       email: dto.email,
       password: hashedPassword,
       role: dto.role ?? 'student',
-      studentId: dto.studentId,
     });
 
     // 4. Return safe user (no password) + their token so they're logged in immediately
