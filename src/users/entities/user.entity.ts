@@ -15,14 +15,6 @@ export class User {
   @Column({ length: 255 })
   password!: string;
 
-<<<<<<< HEAD
-=======
-  @Column({ length: 20, nullable: true })
-  phoneNumber?: string;
-
-  @OneToMany(() => Notification, (notification) => notification.student)
-  notifications!: Notification[];
->>>>>>> cfa9fd558427141a34946465f66fc82820ff6cc4
   @Column({ length: 50, default: 'student' })
   role!: string;
 
@@ -31,5 +23,8 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @OneToMany(() => Notification, (notification) => notification.student)
+  notifications!: Notification[];
 }
 
